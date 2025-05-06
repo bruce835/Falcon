@@ -1,2 +1,1 @@
-Create new tokens for symbols like (), {}, ., etc.
-Push back whitespace within strings.
+Create new tokens for symbols like ., +, -, etc.

@@ -41,7 +41,10 @@ int main(int argc, char *argv[]) {
 			}
 
 			if (tokenType != "String") {
-				tokenize(tokens, buf, src);
+				if (!buf.empty()) {
+					tokenize(tokens, buf, src);
+				}
+				continue;
 			}
 			
 			else {
@@ -51,40 +54,62 @@ int main(int argc, char *argv[]) {
 
 		else if (ch == '\"') {
 			if (tokenType != "String") {
-				tokenType = "String";
+				if (!buf.empty()) {
+					tokenize(tokens, buf, src);
+				}
+
+				tokenType = "\"";
 				buf.push_back(ch);
 				tokenize(tokens, buf, src);
+				tokenType = "String";
 			}
 
 			else {
-				buf.pop_back();
-				tokenize(tokens, buf, src);
-				tokenType = "Type";
+					tokenize(tokens, buf, src);
+					buf.push_back(ch);
+					tokenType = "\"";
+					tokenize(tokens, buf, src);
 			}
 		}
 		
 		else if (tokenType != "String") {
-			if (ch == '(') {
-				tokenType = "(";
+
+		 if (ch == '(' || ch == ')') {
+			if (!buf.empty()) {
+				tokenize(tokens, buf, src);
+			}
+
+			tokenType = std::string(1, ch);
+			buf.push_back(ch);
+			tokenize(tokens, buf, src);
+		}
+			
+			else if (ch == '{' || ch == '}') {
+				if (!buf.empty()) {
+					tokenize(tokens, buf, src);
+				}
+
+				tokenType = std::string(1, ch);
 				buf.push_back(ch);
 				tokenize(tokens, buf, src);
 			}
 
-			else if (ch == ')') {
-				tokenType = ")";
-				buf.push_back(ch);
-				tokenize(tokens, buf, src);
-			}
-			
-			else if (ch == '{') {
-				tokenType = "{";
-				buf.push_back(ch);
-				tokenize(tokens, buf, src);
+			else if (ch == ';') {
+			 if (!buf.empty()) {
+				 tokenize(tokens, buf, src);
+				}
+			 tokenType = ";";
+			 buf.push_back(ch);
+			 tokenize(tokens, buf, src);
 			}
 
 			else {
 				buf.push_back(ch);
 			}
+		}
+		
+		else if (tokenType == "String") {
+			buf.push_back(ch);
 		}
 	}
 
