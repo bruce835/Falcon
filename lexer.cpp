@@ -5,9 +5,20 @@
 #include <vector>
 #include <cctype>
 
-int tokenize(std::vector<char>& buf, const char& bufChar) {
-	std::cout << bufChar;
-	return 0;
+int lineNumber = 1;
+char ch;
+
+struct Token {
+	std::string type;
+	std::string value;
+	int line;
+};
+
+std::vector<Token> tokenize(std::vector<char>& buf, std::ifstream& src) {
+	std::vector<Token> tokens;
+	std::string value(buf.begin(), buf.end());
+	tokens.push_back({"Type", value, lineNumber});
+	return tokens;
 }
 
 int main(int argc, char *argv[]) {
@@ -16,24 +27,28 @@ int main(int argc, char *argv[]) {
 	src.open(srcPath);
 	std::cout << srcPath << std::endl;
 	std::vector<char> buf;
-	char ch;
 	if (!src) {
 		std::cerr << "Source file not found. Exiting.";
 		exit(0);
 	}
 
-	while (!src.eof()) {
-		src.get(ch);
-		buf.push_back(ch);
-	}
-	
-	for (const char& bufChar : buf) {
-		if (std::isspace(bufChar)) {
-			continue;
+	while (src.get(ch)) {
+		if (std::isspace(ch)) {
+			if (ch == '\n') {
+				lineNumber++;
+			}
+		for (const Token& token : tokenize(buf, src)) {
+			std::cout << "\nType: " << token.type << std::endl;
+			std::cout << "Value: " << token.value;
+			std::cout <<"\nLine Number: " << token.line;
 		}
+			buf.clear();
+		}
+
 		else {
-			tokenize(buf, bufChar);
+			buf.push_back(ch);
 		}
 	}
+
 	return 0;
 }
