@@ -15,9 +15,36 @@ struct Token {
 	int line;
 };
 
+std::string checkType(std::vector<char>& buf) {
+	std::string bufString(buf.begin(), buf.end());
+	bool isDeclarator = (bufString == "int" || bufString == "string");
+	bool hasKeyOrInvalidSymbol = false;
+	bool isIdentifier = (tokenType == "Declarator" && isalpha(buf[0]) && !hasKeyOrInvalidSymbol);
+	
+	for (const char& bufChar : buf) {
+		if (!isalnum(bufChar) && bufChar != '-' && bufChar != '_') {
+			hasKeyOrInvalidSymbol = true;
+		}
+	}
+
+	if (isDeclarator) {
+		tokenType = "Declarator";
+	}
+
+	else if (isIdentifier) {
+		tokenType = "Identifier";
+	}
+		
+	else if (bufString == "print") {
+		tokenType = "Keyword"; 
+	}
+
+	return tokenType;
+}
+
 std::vector<Token> tokenize(std::vector<Token>& tokens, std::vector<char>& buf, std::ifstream& src) {
 	std::string value(buf.begin(), buf.end());
-	tokens.push_back({tokenType, value, lineNumber});
+	tokens.push_back({checkType(buf), value, lineNumber});
 	buf.clear();
 	return tokens;
 }
@@ -113,10 +140,11 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	std::cout << std::endl;
 	for (const Token& token : tokens) {
-		std::cout << "\n\nType: " << token.type;
+		std::cout << "\nType: " << token.type;
 		std::cout << "\nValue: " << token.value;
-		std::cout << "\nLine: " << token.line;
+		std::cout << "\nLine: " << token.line << std::endl;
 	}
 
 	return 0;
