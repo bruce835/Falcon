@@ -4,6 +4,7 @@
 #include <cstring>
 #include <vector>
 #include <cctype>
+#include "parser.h"
 
 int lineNumber = 1;
 char ch;
@@ -147,5 +148,6 @@ int main(int argc, char *argv[]) {
 		std::cout << "\nLine: " << token.line << std::endl;
 	}
 
-	return 0;
+  parse();
+  return 0;
 }
