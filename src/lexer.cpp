@@ -4,21 +4,19 @@
 #include <cstring>
 #include <vector>
 #include <cctype>
-#include "parser.h"
+#include "../include/parser.h"
+#include "../include/compiler.h"
+#include "../include/lexer.h"
+#include "../include/libraries/types.hpp"
 
 int lineNumber = 1;
 char ch;
 std::string tokenType = "Type";
-
-struct Token {
-	std::string type;
-	std::string value;
-	int line;
-};
+std::vector<Token> tokens;
 
 std::string checkType(std::vector<char>& buf) {
 	std::string bufString(buf.begin(), buf.end());
-	bool isDeclarator = (bufString == "int" || bufString == "string");
+	bool isDeclarator = (isDataType(bufString));
 	bool hasKeyOrInvalidSymbol = false;
 	bool isIdentifier = (tokenType == "Declarator" && isalpha(buf[0]) && !hasKeyOrInvalidSymbol);
 	
@@ -51,7 +49,6 @@ std::vector<Token> tokenize(std::vector<Token>& tokens, std::vector<char>& buf, 
 }
 
 int main(int argc, char *argv[]) {
-	std::vector<Token> tokens;
 	std::ifstream src;
 	std::string srcPath = argv[1];
 	src.open(srcPath);
@@ -79,6 +76,21 @@ int main(int argc, char *argv[]) {
 				buf.push_back(ch);
 			}
 		}
+
+    else if (ch == ',') {
+      if (tokenType != "String") { 
+      tokenize(tokens, buf, src);
+      if (buf.empty()) {
+        tokenType = ",";
+        buf.push_back(ch);
+        tokenize(tokens, buf, src);
+      }
+      }
+      
+      else {
+        buf.push_back(ch);
+      }
+    }
 
 		else if (ch == '\"') {
 			if (tokenType != "String") {
@@ -142,12 +154,13 @@ int main(int argc, char *argv[]) {
 	}
 
 	std::cout << std::endl;
-	for (const Token& token : tokens) {
+  	for (const Token& token : tokens) {
 		std::cout << "\nType: " << token.type;
 		std::cout << "\nValue: " << token.value;
 		std::cout << "\nLine: " << token.line << std::endl;
-	}
+    
+	} 
 
-  parse();
+  parse(tokens);
   return 0;
 }

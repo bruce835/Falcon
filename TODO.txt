@@ -1,1 +1,0 @@
-Create new tokens for symbols like ., +, -, etc.
