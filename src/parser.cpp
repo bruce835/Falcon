@@ -6,6 +6,21 @@
 #include "../include/libraries/abstractions.hpp"
 
 std::string abstractionType = "null";
+int paramDepth = 0;
+
+void printParseTree(const func& newFunc, int depth = 0) {
+    std::string indent(depth * 4, ' '); // Creates indentation for hierarchy
+    std::cout << indent << "|-- Function: " << newFunc.identifier << "\n";
+    std::cout << indent << "    |-- Return Type: " << newFunc.returnType << "\n";
+    if (!newFunc.parameters.empty()) {
+        std::cout << indent << "    |-- Parameters:\n";
+        for (const auto& param : newFunc.parameters) {
+            std::cout << indent << "        |-- " << param.type << ": " << param.value << "\n";
+        }
+    } else {
+        std::cout << indent << "    |-- No Parameters\n";
+    }
+}
 
 int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
   tokenIterator++;
@@ -17,10 +32,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
   if(nextTokenIt != tokens.end()) {
     Token nextToken = *nextTokenIt;
  if (funcStep == 2) {
-    if (token.type == "(") {
-        std::cout << "\nParameters:";
-    }
-    else {
+    if (token.type != "("){
       std::cerr << "p_01: Expected \"(\".";
     } 
  }
@@ -28,23 +40,34 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
  else if (funcStep == 3) {  
    std::string paramType = "";
    std::string paramValue = "";
-   int paramCount = 0;
-   for (int i = 0; i < 5; i++) {
+   for (int i = 0; i < 100; i++) {
+     std::cout << token.type << " " << token.value << std::endl;
      if (token.type == ")") {
+       std::cout << "\n" << paramDepth;
        break;
      }
+     
+     else if (token.type == "(") {
+       ++tokenIterator;
+       ++nextTokenIt;
+       token = *tokenIterator;
+       nextToken = *nextTokenIt;
+     }
+
      else if (token.value == ",") {
        ++tokenIterator;
        ++nextTokenIt;
        token = *tokenIterator;
        nextToken = *nextTokenIt;
      }
+
      else if (token.value == "\"") {
        ++tokenIterator;
        ++nextTokenIt;
        token = *tokenIterator;
        nextToken = *nextTokenIt;
      }
+
      else {
        parameter newParam;
        newParam.type = token.type;
@@ -54,20 +77,29 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        newFunc.parameters.push_back(newParam);
        ++tokenIterator;
        token = *tokenIterator;
-       nextToken = *nextTokenIt;
        ++nextTokenIt;
+       nextToken = *nextTokenIt;
      }
-    paramCount = i;
-   }
-   if (paramCount == 0) {
-     std::cout << "none";
-   }
-   else {
-   for (parameter& param : newFunc.parameters) {
-     std::cout << param.value << ";";
-   }
    }
  }
+    if (token.type == "(") {
+      paramDepth++;
+     }
+
+    else if (token.type == ")") {
+      if (paramDepth == 0) {
+        std::cerr << "p_02: Expected \"(\" before \")\".";
+      }
+      paramDepth--;
+    }
+
+if (paramDepth > 0) {
+  std::cerr << "p_03: Missing ')'.\n";
+}
+
+else if (paramDepth <0) {
+  std:: cerr << "p_04: Missing ')'.\n";
+}
 }
  return 0;
 }
@@ -87,10 +119,10 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
      func newFunc;
      newFunc.returnType = token.value;
      newFunc.identifier = nextTokenValue;
-     std::cout << "Function " << newFunc.identifier << ":\nReturn Type: " << newFunc.returnType << std::endl; 
       for(int funcStep = 1; funcStep <=3; funcStep++) {
     parseFunc(token, tokenIterator, funcStep, newFunc);
   } 
+      //printParseTree(newFunc, 0);
    } 
   }
 }
@@ -106,5 +138,3 @@ int parse(std::vector<Token>& tokens) {
   toAssembly(tokens);
   return 0;
 }
-
-
