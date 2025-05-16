@@ -9,6 +9,7 @@ struct parameter {
 };
 
 struct func {
+  std::vector<std::string> instructions;
   std::vector<parameter> parameters; 
   std::string returnType;
   std::string identifier;

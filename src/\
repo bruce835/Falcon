@@ -17,21 +17,8 @@ void printParseTree(const func& newFunc, int depth = 0) {
         for (const auto& param : newFunc.parameters) {
             std::cout << indent << "        |-- " << param.type << ": " << param.value << "\n";
         }
-    } 
-
-    else {
+    } else {
         std::cout << indent << "    |-- No Parameters\n";
-    }
-
-    if (!newFunc.instructions.empty()) {
-      std::cout << indent << "    |-- Instructions:\n";
-      for (const std::string& instr : newFunc.instructions) {
-        std::cout << indent << "        |-- " << instr << "\n";
-      }
-    }
-
-    else {
-      std::cout << indent << "    |-- No Instructions\n";
     }
 }
 
@@ -134,11 +121,9 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
      }
 
      if (token.type == "Keyword") {
-       std::string newInstruction = token.value; 
-       newFunc.instructions.push_back(newInstruction);
+        std::cout << token.value;
      }
-
-     else if (token.value == "}") {
+     if (token.value == "}") {
        std::cout << "\nEnd of Func\n";
        return 0;
      }

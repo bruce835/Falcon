@@ -1,4 +1,3 @@
+Parse instruction parameters
 Create new tokens for symbols like ., +, -, etc.
-Create parser
-
 Make compiler compile to program of given name.
