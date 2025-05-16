@@ -27,79 +27,78 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
   if (tokenIterator != tokens.end()) {
     token = *tokenIterator;
   }
-  auto nextTokenIt = std::next(tokenIterator, 1);
+   auto nextTokenIt = std::next(tokenIterator, 1);
 
   if(nextTokenIt != tokens.end()) {
     Token nextToken = *nextTokenIt;
  if (funcStep == 2) {
     if (token.type != "("){
       std::cerr << "p_01: Expected \"(\".";
+       exit(0);
     } 
+    else {
+      paramDepth++;
+    }
  }
 
  else if (funcStep == 3) {  
    std::string paramType = "";
    std::string paramValue = "";
+   --tokenIterator;
+   --nextTokenIt;
+   token = *tokenIterator;
+   nextToken = *nextTokenIt;
    for (int i = 0; i < 100; i++) {
-     std::cout << token.type << " " << token.value << std::endl;
+     ++tokenIterator;
+     ++nextTokenIt;
+     token = *tokenIterator;
+     nextToken = *nextTokenIt;
+
+      bool invalidParamToken = (token.type == "," || token.type == "\"");
+
      if (token.type == ")") {
-       std::cout << "\n" << paramDepth;
-       break;
+        if (paramDepth <= 0) {
+         std::cerr << "p_02: Expected \"(\" before \")\".";
+         exit(0);
+        }
+      else {
+        paramDepth--;
+      }
+     }
+
+     else if (token.type == "{") {
+       if (paramDepth > 0) {
+         std::cerr << "Expected ')' before '{'\n";
+         exit(0);
+       }
+       return 0;
      }
      
      else if (token.type == "(") {
-       ++tokenIterator;
-       ++nextTokenIt;
-       token = *tokenIterator;
-       nextToken = *nextTokenIt;
+       std::cout << "at (:\n";
+       paramDepth++;
      }
 
-     else if (token.value == ",") {
-       ++tokenIterator;
-       ++nextTokenIt;
-       token = *tokenIterator;
-       nextToken = *nextTokenIt;
-     }
-
-     else if (token.value == "\"") {
-       ++tokenIterator;
-       ++nextTokenIt;
-       token = *tokenIterator;
-       nextToken = *nextTokenIt;
-     }
-
-     else {
+     else if (!invalidParamToken){
        parameter newParam;
        newParam.type = token.type;
         paramType = newParam.type;
        newParam.value = token.value;
         paramValue = newParam.value;
+        std::cout << paramType << " " << paramValue << std::endl;
        newFunc.parameters.push_back(newParam);
-       ++tokenIterator;
-       token = *tokenIterator;
-       ++nextTokenIt;
-       nextToken = *nextTokenIt;
      }
    }
+  if (paramDepth > 0) {
+    std::cerr << "p_03: Missing ')'.\n";
+    exit(0);
+  }
+
+  else if (paramDepth <0) {
+    std:: cerr << "p_04: Missing ')'.\n";
+    exit(0);
+  }
  }
-    if (token.type == "(") {
-      paramDepth++;
-     }
-
-    else if (token.type == ")") {
-      if (paramDepth == 0) {
-        std::cerr << "p_02: Expected \"(\" before \")\".";
-      }
-      paramDepth--;
-    }
-
-if (paramDepth > 0) {
-  std::cerr << "p_03: Missing ')'.\n";
-}
-
-else if (paramDepth <0) {
-  std:: cerr << "p_04: Missing ')'.\n";
-}
 }
  return 0;
 }
@@ -122,7 +121,7 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
       for(int funcStep = 1; funcStep <=3; funcStep++) {
     parseFunc(token, tokenIterator, funcStep, newFunc);
   } 
-      //printParseTree(newFunc, 0);
+      printParseTree(newFunc, 0);
    } 
   }
 }

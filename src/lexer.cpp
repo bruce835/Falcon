@@ -154,13 +154,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	std::cout << std::endl;
-  	for (const Token& token : tokens) {
-		std::cout << "\nType: " << token.type;
-		std::cout << "\nValue: " << token.value;
-		std::cout << "\nLine: " << token.line << std::endl;
-    
-	} 
-
   parse(tokens);
   return 0;
 }
