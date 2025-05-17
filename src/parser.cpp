@@ -7,6 +7,7 @@
 
 std::string abstractionType = "null";
 int paramDepth = 0;
+std::vector<parameter> newInstructionParams; 
 
 void printParseTree(const func& newFunc, int depth = 0) {
     std::string indent(depth * 4, ' '); // Creates indentation for hierarchy
@@ -28,6 +29,12 @@ void printParseTree(const func& newFunc, int depth = 0) {
       for (const std::string& instr : newFunc.instructions) {
         std::cout << indent << "        |-- " << instr << "\n";
       }
+      
+      std::cout << indent << "            |-- Parameters: \n";
+
+      for (auto& param : newInstructionParams) {
+        std::cout << indent << "                |--" << param.type << ": " << param.value << std::endl;
+      } 
     }
 
     else {
@@ -161,11 +168,10 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        ++functionIterator;
        }
         functions functionsLocal;
-       functionsLocal.checkKeyword(funcTokens, newInstruction);
+        newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstruction);
      }
 
      else if (token.value == "}") {
-       std::cout << "\nEnd of Func\n";
        return 0;
      }
    }

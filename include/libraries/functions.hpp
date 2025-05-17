@@ -30,7 +30,7 @@ class functions {
     return 0;
   }
 
-  int checkKeyword (std::vector<Token>& funcTokens, const std::string& newInstruction) {  
+  std::vector<parameter> checkKeyword (std::vector<Token>& funcTokens, const std::string& newInstruction) {  
     for (auto& token : funcTokens) {
       if (token.type == "Keyword") {
         currentKeyword = token.value;
@@ -45,7 +45,7 @@ class functions {
     } 
 
     processKeyword();
-    return 0;
+    return params;
   }
 };
 #endif

@@ -1,7 +1,4 @@
 section .data
-  msg db "testString", 0xA
-  msg_len equ $ - msg
-
   msg db "Hello, World!", 0xA
   msg_len equ $ - msg
 
