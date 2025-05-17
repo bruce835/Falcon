@@ -13,5 +13,6 @@ struct func {
   std::vector<parameter> parameters; 
   std::string returnType;
   std::string identifier;
+  int paramCount;
 };
 #endif

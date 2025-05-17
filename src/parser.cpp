@@ -3,7 +3,7 @@
 #include <string>
 #include "../include/parser.h"
 #include "../include/compiler.h"
-#include "../include/libraries/abstractions.hpp"
+#include "../include/libraries/functions.hpp"
 
 std::string abstractionType = "null";
 int paramDepth = 0;
@@ -107,7 +107,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
     exit(0);
   }
 
-  else if (paramDepth <0) {
+  else if (paramDepth < 0) {
     std:: cerr << "p_04: Missing ')'.\n";
     exit(0);
   }
@@ -136,6 +136,32 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
      if (token.type == "Keyword") {
        std::string newInstruction = token.value; 
        newFunc.instructions.push_back(newInstruction);
+
+       std::vector<Token> funcTokens;
+       
+       int functionIterator = 0;
+       while (true) {
+       token = *tokenIterator;
+       nextToken = *nextTokenIt;       
+        if (token.value == ";") {
+          break;
+        }
+        
+        else if (token.type == "Keyword" && functionIterator > 0) {
+          std::cerr << "Expected ';'";
+          exit (0);
+        }
+
+        else {
+          funcTokens.push_back(token);
+        }
+
+       ++tokenIterator;
+       ++nextTokenIt;
+       ++functionIterator;
+       }
+        functions functionsLocal;
+       functionsLocal.checkKeyword(funcTokens, newInstruction);
      }
 
      else if (token.value == "}") {
