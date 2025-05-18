@@ -7,29 +7,29 @@
 #include <fstream>
 #include <iostream>
 
-bool windows = false;
-  bool macOS = false;  
-  bool linux = false;  
+  bool usingWindows = false;
+  bool usingMacOS = false;  
+  bool usingLinux = false;  
 
   std::string writeCode;
   std::string exitCode;
 
   int checkSyscode() {
       #if defined(_WIN32) || defined(_WIN64)
-        windows = true;
+        usiongWindows = true;
       #elif defined(__APPLE__) && defined(__MACH__)
-        macOS = true;
+        usingMacOS = true;
       #elif defined(__linux__)
-        linux = true;
+        usingLinux = true;
       #endif
 
         
-      if(macOS) {
+      if(usingMacOS) {
         writeCode = "0x2000004";
         exitCode = "0x2000001";
       }
 
-      else {
+      else if (usingLinux) {
         writeCode = "1";
         exitCode = "60";
       }
@@ -99,7 +99,6 @@ bool windows = false;
     writeAsm << " ret\n";
 
     for (std::string& line : data) {
-      std::cout << line << std::endl;
       writeAsm << line << "\n";
     }
     writeAsm.close();

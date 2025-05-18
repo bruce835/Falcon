@@ -4,7 +4,7 @@ section .text
 _start:
   call main
 
-  mov rax, 0x2000001
+  mov rax, 60
   xor rdi, rdi
   syscall
 
@@ -14,7 +14,7 @@ main:
  lea rsi, [rel+litString]
  mov rdx, 13
  mov rdi, 1
- mov rax, 0x2000004
+ mov rax, 1
  syscall
  mov rax, 1
  pop rbp
