@@ -1,17 +1,22 @@
-section .data
-  msg db "Hello, World!", 0xA
-  msg_len equ $ - msg
-
 section .text
-global _start
+  global _start
 
 _start:
-  mov rax, 1
-  mov rdi, 1
-  mov rsi, msg
-  mov rdx, msg_len
-  syscall
+  call main
 
-  mov rax, 60
+  mov rax, 0x2000001
   xor rdi, rdi
   syscall
+
+main:
+ push rbp
+ mov rbp, rsp
+ lea rsi, [rel+litString]
+ mov rdx, 13
+ mov rdi, 1
+ mov rax, 0x2000004
+ syscall
+ mov rax, 1
+ pop rbp
+ ret
+litString: db "Yay!", 0

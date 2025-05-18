@@ -1,45 +1,107 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 #include "../include/compiler.h"
 #include "../include/lexer.h"
+#include <fstream>
+#include <iostream>
 
-void toAssembly(const std::vector<Token>& tokens) {
-  std::cout << "\nCompiling\n";
-  std::fstream asmFile("asm/example.asm", std::iostream::out);
+bool windows = false;
+  bool macOS = false;  
+  bool linux = false;  
 
-  if (!asmFile) {
-    std::cout << "bruh";
+  std::string writeCode;
+  std::string exitCode;
+
+  int checkSyscode() {
+      #if defined(_WIN32) || defined(_WIN64)
+        windows = true;
+      #elif defined(__APPLE__) && defined(__MACH__)
+        macOS = true;
+      #elif defined(__linux__)
+        linux = true;
+      #endif
+
+        
+      if(macOS) {
+        writeCode = "0x2000004";
+        exitCode = "0x2000001";
+      }
+
+      else {
+        writeCode = "1";
+        exitCode = "60";
+      }
+      return 0;
+  }
+    
+  void compiler::asmClear() {
+    checkSyscode();
+    std::ofstream asmFile("asm/example.asm", std::iostream::trunc); 
+    asmFile << "section .text\n";
+    asmFile << "  global _start\n";
+    asmFile << "\n_start:\n";
+    asmFile << "  call main";
+    asmFile << "\n\n  mov rax, " << exitCode << "\n";
+    asmFile << "  xor rdi, rdi\n";
+    asmFile << "  syscall\n";
+    asmFile.close();
   }
 
-  asmFile << "section .data\n";
-  for (const Token& token : tokens) {
-    if (token.type == "String") {
-      asmFile << "  msg db \"" << token.value << "\", 0xA\n";
-      asmFile << "  msg_len equ $ - msg\n\n";
-    }
-  }
-
-  asmFile <<"section .text\n";
-  asmFile << "global _start\n\n";
-  asmFile << "_start:\n";
-
-  for (const Token& token : tokens) {
-    if (token.type == "Keyword") {
-      if (token.value == "print") {
-        asmFile << "  mov rax, 1\n";    // syscall number (sys_write)
-        asmFile << "  mov rdi, 1\n";    // file descriptor (stdout)
-        asmFile << "  mov rsi, msg\n";  // pointer to message
-        asmFile << "  mov rdx, msg_len\n"; // message length
-        asmFile << "  syscall\n\n";
+  std::vector<std::string> toAssembly_print(std::vector<parameter>& params, std::ofstream& writeAsm) {
+    std::vector<std::string> data;
+    for (auto& param : params) {
+      if (param.type != "String"){
+        std::cerr << "Expected 'String', found'" << param.type << "'.\n";
+      }
+      
+      else {
+        writeAsm << " lea rsi, [rel+litString]";
+        writeAsm << "\n mov rdx, 13\n";
+        writeAsm << " mov rdi, 1\n";
+        writeAsm << " mov rax, " << writeCode << "\n";
+        writeAsm << " syscall\n";
+        data.push_back("litString: db \"" + param.value + "\", 0");
       }
     }
+   return data; 
   }
+
+  std::vector<std::string> processInstruction(instruction& instr, std::ofstream& writeAsm) {
+    std::vector<std::string> data;
+    if (instr.keyword == "print") {
+        data = (toAssembly_print(instr.parameters, writeAsm));
+    }
+    return data;
+  }
+
+  void compiler::toAssembly_function(func& newFunc) {
+    std::vector<std::string> data;
+
+    std::ofstream writeAsm("asm/example.asm", std::iostream::app);
+    writeAsm << "\n" << newFunc.identifier << ":\n";
+
+  // Stuff goes here
+
+    writeAsm << " push rbp\n";
+    writeAsm << " mov rbp, rsp\n";
   
-      asmFile << "  mov rax, 60\n";  // syscall number (sys_exit)
-    asmFile << "  xor rdi, rdi\n"; // Exit status 0
-    asmFile << "  syscall\n";
-  
-  asmFile.close();
-  exit(0);
-}
+    for(instruction& instr : newFunc.instructions) {
+      data = processInstruction(instr, writeAsm);
+    }
+
+    if(newFunc.returnType == "int") {
+      writeAsm << " mov rax, 1\n";
+    }
+
+    writeAsm << " pop rbp\n";
+    writeAsm << " ret\n";
+
+    for (std::string& line : data) {
+      std::cout << line << std::endl;
+      writeAsm << line << "\n";
+    }
+    writeAsm.close();
+    return;
+  }

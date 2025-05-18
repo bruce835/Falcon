@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include <string>
 #include "../include/parser.h"
 #include "../include/compiler.h"
@@ -8,6 +9,8 @@
 std::string abstractionType = "null";
 int paramDepth = 0;
 std::vector<parameter> newInstructionParams; 
+
+compiler comp;
 
 void printParseTree(const func& newFunc, int depth = 0) {
     std::string indent(depth * 4, ' '); // Creates indentation for hierarchy
@@ -26,8 +29,8 @@ void printParseTree(const func& newFunc, int depth = 0) {
 
     if (!newFunc.instructions.empty()) {
       std::cout << indent << "    |-- Instructions:\n";
-      for (const std::string& instr : newFunc.instructions) {
-        std::cout << indent << "        |-- " << instr << "\n";
+      for (const auto& instr : newFunc.instructions) {
+        std::cout << indent << "        |-- " << instr.keyword << "\n";
       }
       
       std::cout << indent << "            |-- Parameters: \n";
@@ -43,6 +46,7 @@ void printParseTree(const func& newFunc, int depth = 0) {
 }
 
 int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
+  std::vector<Token> funcTokens;
   tokenIterator++;
   if (tokenIterator != tokens.end() && tokenIterator != tokens.begin()) {
     token = *tokenIterator;
@@ -141,13 +145,10 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
      }
 
      if (token.type == "Keyword") {
-       std::string newInstruction = token.value; 
-       newFunc.instructions.push_back(newInstruction);
+       std::string newInstructionKeyword = token.value; 
 
-       std::vector<Token> funcTokens;
-       
-       int functionIterator = 0;
        while (true) {
+         int functionIterator = 0;
        token = *tokenIterator;
        nextToken = *nextTokenIt;       
         if (token.value == ";") {
@@ -168,7 +169,11 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        ++functionIterator;
        }
         functions functionsLocal;
-        newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstruction);
+        newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
+        instruction newInstruction; 
+        newInstruction.keyword = newInstructionKeyword;
+        newInstruction.parameters = newInstructionParams;
+        newFunc.instructions.push_back(newInstruction);
      }
 
      else if (token.value == "}") {
@@ -196,8 +201,9 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
      newFunc.returnType = token.value;
      newFunc.identifier = nextTokenValue;
       for(int funcStep = 1; funcStep <=4; funcStep++) {
-    parseFunc(token, tokenIterator, funcStep, newFunc);
+    parseFunc(token, tokenIterator, funcStep, newFunc);    
   } 
+      comp.toAssembly_function(newFunc);
       printParseTree(newFunc, 0);
    } 
   }
@@ -207,10 +213,9 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
 }
 
 int parse(std::vector<Token>& tokens) {
+  comp.asmClear();
   for (std::vector<Token>::iterator tokenIterator = tokens.begin(); tokenIterator != tokens.end(); tokenIterator++) {
     scan(*tokenIterator, tokenIterator);
   }
-
-  toAssembly(tokens);
   return 0;
 }

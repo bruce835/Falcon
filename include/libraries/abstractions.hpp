@@ -8,8 +8,13 @@ struct parameter {
   std::string value;
 };
 
+struct instruction {
+  std::vector<parameter> parameters;
+  std::string keyword;
+};
+
 struct func {
-  std::vector<std::string> instructions;
+  std::vector<instruction> instructions;
   std::vector<parameter> parameters; 
   std::string returnType;
   std::string identifier;
