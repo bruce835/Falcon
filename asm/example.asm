@@ -12,11 +12,11 @@ main:
  push rbp
  mov rbp, rsp
  lea rsi, [rel+litString]
- mov rdx, 13
+ mov rdx, 24
  mov rdi, 1
  mov rax, 1
  syscall
  mov rax, 1
  pop rbp
  ret
-litString: db "Yay!", 0
+litString: db "My first Falcon program!", 0

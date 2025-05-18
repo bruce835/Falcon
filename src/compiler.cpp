@@ -58,7 +58,7 @@
       
       else {
         writeAsm << " lea rsi, [rel+litString]";
-        writeAsm << "\n mov rdx, 13\n";
+        writeAsm << "\n mov rdx, " + std::to_string(param.value.size()) + "\n";
         writeAsm << " mov rdi, 1\n";
         writeAsm << " mov rax, " << writeCode << "\n";
         writeAsm << " syscall\n";
