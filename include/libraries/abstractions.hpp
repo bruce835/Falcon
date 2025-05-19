@@ -2,6 +2,7 @@
 #define ABSTRACTIONS_HPP
 #include <string>
 #include <vector>
+#include <optional>
 
 struct parameter {
   std::string type;
@@ -17,6 +18,7 @@ struct func {
   std::vector<instruction> instructions;
   std::vector<parameter> parameters; 
   std::string returnType;
+  std::vector<std::string> returnValues;
   std::string identifier;
   int paramCount;
 };

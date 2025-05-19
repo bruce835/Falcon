@@ -16,6 +16,7 @@ main:
  mov rdi, 1
  mov rax, 1
  syscall
+ mov rax, 3
  pop rbp
  ret
  lea rsi, [rel+litString_1]
@@ -23,7 +24,7 @@ main:
  mov rdi, 1
  mov rax, 1
  syscall
- mov rax, 1
+ mov rax, 0
  pop rbp
  ret
 litString_0: db "Yay!", 0

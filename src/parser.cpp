@@ -151,20 +151,36 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        token = *tokenIterator;
        nextToken = *nextTokenIt;       
         if (token.value == ";") {
-        functions functionsLocal;
-        newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
-        funcTokens.clear();
-        instruction newInstruction; 
-        newInstruction.keyword = newInstructionKeyword;
-        newInstruction.parameters = newInstructionParams;
-        newFunc.instructions.push_back(newInstruction);
+          functions functionsLocal;
+          newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
+          funcTokens.clear();
+          instruction newInstruction; 
+          newInstruction.keyword = newInstructionKeyword;
+          newInstruction.parameters = newInstructionParams;
+          newFunc.instructions.push_back(newInstruction);
           break;
+        }
+
+        else if (token.value == "return") {
+          if (newFunc.returnType == "int") {
+              for (const char& ch : nextToken.value) {
+                if (ch != ';' && !isdigit(ch)) {
+                  std::cerr << "Expected numerical value.";
+                  exit(0);
+                }
+            }
+              if (nextToken.value != ";") {
+                newFunc.returnValues.push_back(nextToken.value); 
+                funcTokens.push_back(nextToken);
+              }
+          }
+          funcTokens.push_back(token);
         }
         
         else if (token.type == "Keyword" && functionIterator > 0) {
           std::cerr << "Expected ';'";
           exit (0);
-        }
+        } 
 
         else {
           funcTokens.push_back(token);

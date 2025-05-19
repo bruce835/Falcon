@@ -50,7 +50,6 @@ class functions {
      } 
     } 
 
-    std::cout << "\nParameter Count" << params.size() << std::endl;
     processKeyword();
     std::vector<parameter> paramsClone = params;
     params.clear();

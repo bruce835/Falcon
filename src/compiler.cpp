@@ -65,7 +65,6 @@
         writeAsm << " mov rdi, 1\n";
         writeAsm << " mov rax, " << writeCode << "\n";
         writeAsm << " syscall\n";
-        std::cout << "pushing back\n";
         data.push_back("litString_" + std::to_string(litStringCount) + ": db \"" + param.value + "\", 0");
         litStringCount++;
       }
@@ -73,12 +72,26 @@
    return data; 
   }
 
-  std::vector<std::string> processInstruction(instruction& instr, std::ofstream& writeAsm) {
+  std::vector<std::string> processInstruction(instruction& instr, std::ofstream& writeAsm, func& newFunc) {
     if (instr.keyword == "print") {
       data = (toAssembly_print(instr.parameters, writeAsm));
     }
 
     else if (instr.keyword == "return") {
+
+    if(newFunc.returnType == "int") {
+      writeAsm << " mov rax, ";
+     if (newFunc.returnValues.empty()) {
+       writeAsm << "0";
+     } 
+     
+     else {
+       writeAsm << *newFunc.returnValues.begin();
+       newFunc.returnValues.erase(newFunc.returnValues.begin());
+     }
+     writeAsm << "\n";
+    }
+
       writeAsm << " pop rbp\n";
       writeAsm << " ret\n";       
     }
@@ -93,11 +106,20 @@
     writeAsm << " mov rbp, rsp\n";
   
     for(instruction& instr : newFunc.instructions) {
-      data = processInstruction(instr, writeAsm);
+      data = processInstruction(instr, writeAsm, newFunc);
     }
 
     if(newFunc.returnType == "int") {
-      writeAsm << " mov rax, 1\n";
+      writeAsm << " mov rax, ";
+     if (newFunc.returnValues.empty()) {
+       writeAsm << "0";
+     } 
+     
+     else {
+       writeAsm << *newFunc.returnValues.begin();
+       newFunc.returnValues.erase(newFunc.returnValues.begin());
+     }
+     writeAsm << "\n";
     }
 
     writeAsm << " pop rbp\n";
