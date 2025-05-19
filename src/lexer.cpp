@@ -13,6 +13,7 @@ int lineNumber = 1;
 char ch;
 std::string tokenType = "Type";
 std::vector<Token> tokens;
+std::string fileName = "";
 
 std::string checkType(std::vector<char>& buf) {
 	std::string bufString(buf.begin(), buf.end());
@@ -52,9 +53,35 @@ std::vector<Token> tokenize(std::vector<Token>& tokens, std::vector<char>& buf, 
 int main(int argc, char *argv[]) {
 	std::ifstream src;
 	std::string srcPath = argv[1];
+
+  for (const char& ch : srcPath) {
+    if (ch == '/') {
+      fileName.clear();
+    } 
+    else {
+      fileName.push_back(ch);
+    }
+  }
+
+  for (char& ch : fileName) {
+    if (ch == '.') {
+      while (true) {
+        if (fileName.back() == '.') {
+          fileName.pop_back();
+          break;
+        }
+        fileName.pop_back();
+        
+        if (fileName.empty()) {
+          break;
+        }
+      }
+    }
+  }
+
 	src.open(srcPath);
-	std::cout << srcPath << std::endl;
 	std::vector<char> buf;
+
 	if (!src) {
 		std::cerr << "Source file not found. Exiting.";
 		exit(0);
@@ -154,7 +181,6 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	std::cout << std::endl;
-  parse(tokens);
+  parse(tokens, fileName);
   return 0;
 }

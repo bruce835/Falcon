@@ -7,6 +7,8 @@
 #include "../include/lexer.h"
 #include "libraries/functions.hpp"
 
+extern bool usingMacos;
+extern bool usingLinux;
 class compiler {
   public:
 

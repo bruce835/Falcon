@@ -2,6 +2,9 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <unistd.h>
+#include <sys/wait.h>
+#include "../include/lexer.h"
 #include "../include/parser.h"
 #include "../include/compiler.h"
 #include "../include/libraries/functions.hpp"
@@ -11,6 +14,39 @@ int paramDepth = 0;
 std::vector<parameter> newInstructionParams; 
 
 compiler comp;
+
+
+void compileForLinux(const std::string& fileName) {
+    std::vector<std::vector<std::string>> commands = {
+        {"nasm", "-f", "elf64", "asm/" + fileName + ".asm", "-o", "asm/" + fileName + ".o"},
+        {"ld", "asm/" + fileName + ".o", "-o", fileName}
+    };
+
+    for (const auto& cmd : commands) {
+        std::vector<char*> args;
+        for (const auto& str : cmd) {
+            args.push_back(const_cast<char*>(str.c_str()));
+        }
+        args.push_back(nullptr);
+
+        pid_t pid = fork();
+        if (pid == 0) {
+            execvp(args[0], args.data());
+            std::cerr << "execvp failed for " << args[0] << "\n";
+            exit(EXIT_FAILURE);
+        }
+
+        else if (pid > 0) {
+          int status;
+          waitpid(pid, &status, 0);
+        }
+
+        else if (pid < 0) {
+            std::cerr << "Fork failed!\n";
+            exit(EXIT_FAILURE);
+        }
+    }
+}
 
 void printParseTree(const func& newFunc, int depth = 0) {
     std::string indent(depth * 4, ' '); // Creates indentation for hierarchy
@@ -228,10 +264,14 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
   return 0;
 }
 
-int parse(std::vector<Token>& tokens) {
+int parse(std::vector<Token>& tokens, std::string& fileName) {
   comp.asmClear();
   for (std::vector<Token>::iterator tokenIterator = tokens.begin(); tokenIterator != tokens.end(); tokenIterator++) {
     scan(*tokenIterator, tokenIterator);
+  }
+  
+  if (usingLinux) {
+    compileForLinux(fileName);
   }
   return 0;
 }

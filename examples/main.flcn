@@ -1,5 +1,4 @@
 int main() {
-	print("Yay!");
-  return 3;
+	print("bruh!");
   print("pleasework");
 }

@@ -11,4 +11,5 @@ struct Token {
 };
 
 extern std::vector<Token> tokens;
+extern std::string fileName;
 #endif

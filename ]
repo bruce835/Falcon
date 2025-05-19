@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 
+  bool usingWindows = false;
   bool usingMacOS = false;  
   bool usingLinux = false;  
 
@@ -18,7 +19,9 @@
   int litStringCount = 0;
 
   int checkSyscode() {
-      #if defined(__APPLE__) && defined(__MACH__)
+      #if defined(_WIN32) || defined(_WIN64)
+        usiongWindows = true;
+      #elif defined(__APPLE__) && defined(__MACH__)
         usingMacOS = true;
       #elif defined(__linux__)
         usingLinux = true;
@@ -39,7 +42,7 @@
     
   void compiler::asmClear() {
     checkSyscode();
-    std::ofstream asmFile("asm/" + fileName + ".asm", std::iostream::trunc); 
+    std::ofstream asmFile("asm/example.asm", std::iostream::trunc); 
     asmFile << "section .text\n";
     asmFile << "  global _start\n";
     asmFile << "\n_start:\n";
@@ -96,7 +99,7 @@
   }
 
   void compiler::toAssembly_function(func& newFunc) {
-    std::ofstream writeAsm("asm/" + fileName + ".asm", std::iostream::app);
+    std::ofstream writeAsm("asm/" + filename + ".asm", std::iostream::app);
     writeAsm << "\n" << newFunc.identifier << ":\n";
 
     writeAsm << " push rbp\n";
