@@ -14,6 +14,10 @@
   std::string writeCode;
   std::string exitCode;
 
+  std::vector<std::string> data;
+
+  int litStringCount = 0;
+
   int checkSyscode() {
       #if defined(_WIN32) || defined(_WIN64)
         usiongWindows = true;
@@ -50,19 +54,19 @@
   }
 
   std::vector<std::string> toAssembly_print(std::vector<parameter>& params, std::ofstream& writeAsm) {
-    std::vector<std::string> data;
     for (auto& param : params) {
       if (param.type != "String"){
         std::cerr << "Expected 'String', found'" << param.type << "'.\n";
       }
       
-      else {
-        writeAsm << " lea rsi, [rel+litString]";
+      else { 
+        writeAsm << " lea rsi, [rel+litString_" + std::to_string(litStringCount) + "]";
         writeAsm << "\n mov rdx, " + std::to_string(param.value.size()) + "\n";
         writeAsm << " mov rdi, 1\n";
         writeAsm << " mov rax, " << writeCode << "\n";
         writeAsm << " syscall\n";
-        data.push_back("litString: db \"" + param.value + "\", 0");
+        data.push_back("litString_" + std::to_string(litStringCount) + ": db \"" + param.value + "\", 0");
+        litStringCount++;
       }
     }
    return data; 
@@ -101,6 +105,7 @@
     for (std::string& line : data) {
       writeAsm << line << "\n";
     }
+    data.clear();
     writeAsm.close();
     return;
   }

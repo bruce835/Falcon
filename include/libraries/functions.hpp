@@ -31,12 +31,13 @@ class functions {
   }
 
   std::vector<parameter> checkKeyword (std::vector<Token>& funcTokens, const std::string& newInstruction) {  
+    params.clear();
     for (auto& token : funcTokens) {
       if (token.type == "Keyword") {
         currentKeyword = token.value;
       }
 
-      else if (token.type != "," && token.type != "\"" && token.type != "(" && token.type != ")") { 
+      else if (token.type != ";" && token.type != "," && token.type != "\"" && token.type != "(" && token.type != ")") { 
        parameter param;
        param.value = token.value;
        param.type = token.type;
@@ -44,8 +45,11 @@ class functions {
      } 
     } 
 
+    std::cout << "\nParameter Count" << params.size() << std::endl;
     processKeyword();
-    return params;
+    std::vector<parameter> paramsClone = params;
+    params.clear();
+    return paramsClone;
   }
 };
 #endif

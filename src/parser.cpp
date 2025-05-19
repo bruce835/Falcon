@@ -152,6 +152,13 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        token = *tokenIterator;
        nextToken = *nextTokenIt;       
         if (token.value == ";") {
+        functions functionsLocal;
+        newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
+        funcTokens.clear();
+        instruction newInstruction; 
+        newInstruction.keyword = newInstructionKeyword;
+        newInstruction.parameters = newInstructionParams;
+        newFunc.instructions.push_back(newInstruction);
           break;
         }
         
@@ -168,12 +175,6 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        ++nextTokenIt;
        ++functionIterator;
        }
-        functions functionsLocal;
-        newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
-        instruction newInstruction; 
-        newInstruction.keyword = newInstructionKeyword;
-        newInstruction.parameters = newInstructionParams;
-        newFunc.instructions.push_back(newInstruction);
      }
 
      else if (token.value == "}") {
