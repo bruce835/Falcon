@@ -10,11 +10,16 @@ class functions {
   // Keywords
   public:
   func print;
+  //TODO: make this an array and actually use it
   parameter printParameter;
+  
+  func returnFunc;
 
   functions() {
     printParameter.type = "String";
     print.paramCount = 1;
+
+    returnFunc.paramCount = 0; 
   }
 
     std::vector<parameter> params;

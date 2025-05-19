@@ -16,6 +16,8 @@ main:
  mov rdi, 1
  mov rax, 1
  syscall
+ pop rbp
+ ret
  lea rsi, [rel+litString_1]
  mov rdx, 10
  mov rdi, 1

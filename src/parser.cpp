@@ -31,13 +31,11 @@ void printParseTree(const func& newFunc, int depth = 0) {
       std::cout << indent << "    |-- Instructions:\n";
       for (const auto& instr : newFunc.instructions) {
         std::cout << indent << "        |-- " << instr.keyword << "\n";
+        std::cout << indent << "            |-- Parameters: \n";
+        for (auto& param : newInstructionParams) {
+          std::cout << indent << "                |--" << param.type << ": " << param.value << std::endl;
+        } 
       }
-      
-      std::cout << indent << "            |-- Parameters: \n";
-
-      for (auto& param : newInstructionParams) {
-        std::cout << indent << "                |--" << param.type << ": " << param.value << std::endl;
-      } 
     }
 
     else {
@@ -52,6 +50,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
     token = *tokenIterator;
   }
    auto nextTokenIt = std::next(tokenIterator, 1);
+   
 
   if(nextTokenIt != tokens.end() && nextTokenIt != tokens.begin()) {
     Token nextToken = *nextTokenIt;
@@ -205,7 +204,7 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
     parseFunc(token, tokenIterator, funcStep, newFunc);    
   } 
       comp.toAssembly_function(newFunc);
-      printParseTree(newFunc, 0);
+    //  printParseTree(newFunc, 0);
    } 
   }
 }

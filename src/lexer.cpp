@@ -19,6 +19,7 @@ std::string checkType(std::vector<char>& buf) {
 	bool isDeclarator = (isDataType(bufString));
 	bool hasKeyOrInvalidSymbol = false;
 	bool isIdentifier = (tokenType == "Declarator" && isalpha(buf[0]) && !hasKeyOrInvalidSymbol);
+  bool is_Keyword = (isKeyword(bufString));
 	
 	for (const char& bufChar : buf) {
 		if (!isalnum(bufChar) && bufChar != '-' && bufChar != '_') {
@@ -34,7 +35,7 @@ std::string checkType(std::vector<char>& buf) {
 		tokenType = "Identifier";
 	}
 		
-	else if (bufString == "print") {
+	else if (is_Keyword) {
 		tokenType = "Keyword"; 
 	}
 

@@ -65,6 +65,7 @@
         writeAsm << " mov rdi, 1\n";
         writeAsm << " mov rax, " << writeCode << "\n";
         writeAsm << " syscall\n";
+        std::cout << "pushing back\n";
         data.push_back("litString_" + std::to_string(litStringCount) + ": db \"" + param.value + "\", 0");
         litStringCount++;
       }
@@ -73,20 +74,20 @@
   }
 
   std::vector<std::string> processInstruction(instruction& instr, std::ofstream& writeAsm) {
-    std::vector<std::string> data;
     if (instr.keyword == "print") {
-        data = (toAssembly_print(instr.parameters, writeAsm));
+      data = (toAssembly_print(instr.parameters, writeAsm));
+    }
+
+    else if (instr.keyword == "return") {
+      writeAsm << " pop rbp\n";
+      writeAsm << " ret\n";       
     }
     return data;
   }
 
   void compiler::toAssembly_function(func& newFunc) {
-    std::vector<std::string> data;
-
     std::ofstream writeAsm("asm/example.asm", std::iostream::app);
     writeAsm << "\n" << newFunc.identifier << ":\n";
-
-  // Stuff goes here
 
     writeAsm << " push rbp\n";
     writeAsm << " mov rbp, rsp\n";
@@ -105,6 +106,7 @@
     for (std::string& line : data) {
       writeAsm << line << "\n";
     }
+
     data.clear();
     writeAsm.close();
     return;
