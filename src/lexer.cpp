@@ -46,6 +46,10 @@ std::string checkType(std::vector<char>& buf) {
 }
 
 std::vector<Token> tokenize(std::vector<Token>& tokens, std::vector<char>& buf, std::ifstream& src) {
+  if (buf.empty()) {
+    return tokens;
+  }
+
 	std::string value(buf.begin(), buf.end());
 	tokens.push_back({checkType(buf), value, lineNumber});
 	buf.clear();
@@ -68,9 +72,7 @@ std::vector<Token> readTokens(const std::string& srcPath) {
 			}
 
 			if (tokenType != "String") {
-				if (!buf.empty()) {
-					tokenize(tokens, buf, src);
-				}
+				tokenize(tokens, buf, src);
 				continue;
 			}
 			
@@ -96,10 +98,7 @@ std::vector<Token> readTokens(const std::string& srcPath) {
 
 		else if (ch == '\"') {
 			if (tokenType != "String") {
-				if (!buf.empty()) {
-					tokenize(tokens, buf, src);
-				}
-
+				tokenize(tokens, buf, src);
 				tokenType = "\"";
 				buf.push_back(ch);
 				tokenize(tokens, buf, src);
@@ -107,39 +106,31 @@ std::vector<Token> readTokens(const std::string& srcPath) {
 			}
 
 			else {
-					tokenize(tokens, buf, src);
-					buf.push_back(ch);
-					tokenType = "\"";
-					tokenize(tokens, buf, src);
+        tokenize(tokens, buf, src);
+        buf.push_back(ch);
+        tokenType = "\"";
+        tokenize(tokens, buf, src);
 			}
 		}
 		
 		else if (tokenType != "String") {
 
 		 if (ch == '(' || ch == ')') {
-			if (!buf.empty()) {
-				tokenize(tokens, buf, src);
-			}
-
+			tokenize(tokens, buf, src);
 			tokenType = std::string(1, ch);
 			buf.push_back(ch);
 			tokenize(tokens, buf, src);
 		}
 			
 			else if (ch == '{' || ch == '}') {
-				if (!buf.empty()) {
-					tokenize(tokens, buf, src);
-				}
-
+				tokenize(tokens, buf, src);
 				tokenType = std::string(1, ch);
 				buf.push_back(ch);
 				tokenize(tokens, buf, src);
 			}
 
 			else if (ch == ';') {
-			 if (!buf.empty()) {
-				 tokenize(tokens, buf, src);
-				}
+			 tokenize(tokens, buf, src);
 			 tokenType = ";";
 			 buf.push_back(ch);
 			 tokenize(tokens, buf, src);
@@ -184,7 +175,12 @@ int main(int argc, char *argv[]) {
       }
     }
   }
+
   tokens = readTokens(srcPath);
+  
+  for (auto token : tokens) {
+    std::cout << token.value;
+  }
   parse(tokens, fileName);
   return 0;
 }

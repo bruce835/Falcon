@@ -55,6 +55,7 @@ void printParseTree(const func& newFunc, int depth = 0) {
     std::cout << indent << "    |-- Return Type: " << newFunc.returnType << "\n";
     if (!newFunc.parameters.empty()) {
         std::cout << indent << "    |-- Parameters:\n";
+
         for (const auto& param : newFunc.parameters) {
             std::cout << indent << "        |-- " << param.type << ": " << param.value << "\n";
         }
@@ -66,9 +67,11 @@ void printParseTree(const func& newFunc, int depth = 0) {
 
     if (!newFunc.instructions.empty()) {
       std::cout << indent << "    |-- Instructions:\n";
+
       for (const auto& instr : newFunc.instructions) {
         std::cout << indent << "        |-- " << instr.keyword << "\n";
         std::cout << indent << "            |-- Parameters: \n";
+
         for (auto& param : newInstructionParams) {
           std::cout << indent << "                |--" << param.type << ": " << param.value << std::endl;
         } 
@@ -108,6 +111,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
    --nextTokenIt;
    token = *tokenIterator;
    nextToken = *nextTokenIt;
+
    for (int i = 0; i < 100; i++) {
      ++tokenIterator;
      ++nextTokenIt;
@@ -149,6 +153,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        newFunc.parameters.push_back(newParam);
      }
    }
+
   if (paramDepth > 0) {
     std::cerr << "p_03: Missing ')'.\n";
     exit(0);
@@ -187,6 +192,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
          int functionIterator = 0;
        token = *tokenIterator;
        nextToken = *nextTokenIt;       
+
         if (token.value == ";") {
           functions functionsLocal;
           newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
@@ -248,17 +254,19 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
     nextTokenType = nextToken.type;
     nextTokenValue = nextToken.value;
     if (token.type == "Declarator") {
-    if (nextTokenType == "Identifier") {
-     abstractionType = "Function";
-     func newFunc;
-     newFunc.returnType = token.value;
-     newFunc.identifier = nextTokenValue;
-      for(int funcStep = 1; funcStep <=4; funcStep++) {
-    parseFunc(token, tokenIterator, funcStep, newFunc);    
-  } 
-      comp.toAssembly_function(newFunc);
-    //  printParseTree(newFunc, 0);
-   } 
+      if (nextTokenType == "Identifier") {
+       abstractionType = "Function";
+       func newFunc;
+       newFunc.returnType = token.value;
+       newFunc.identifier = nextTokenValue;
+
+        for(int funcStep = 1; funcStep <=4; funcStep++) {
+         parseFunc(token, tokenIterator, funcStep, newFunc);    
+        } 
+
+        comp.toAssembly_function(newFunc);
+      //  printParseTree(newFunc, 0);
+      } 
   }
 }
 
@@ -267,6 +275,7 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
 
 int parse(std::vector<Token>& tokens, std::string& fileName) {
   comp.asmClear();
+
   for (std::vector<Token>::iterator tokenIterator = tokens.begin(); tokenIterator != tokens.end(); tokenIterator++) {
     scan(*tokenIterator, tokenIterator);
   }

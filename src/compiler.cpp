@@ -75,24 +75,23 @@
     }
 
     else if (instr.keyword == "return") {
+      if(newFunc.returnType == "int") {
+        writeAsm << " mov rax, ";
+        if (newFunc.returnValues.empty()) {
+         writeAsm << "0";
+        } 
 
-    if(newFunc.returnType == "int") {
-      writeAsm << " mov rax, ";
-     if (newFunc.returnValues.empty()) {
-       writeAsm << "0";
-     } 
-     
-     else {
-       writeAsm << *newFunc.returnValues.begin();
-       newFunc.returnValues.erase(newFunc.returnValues.begin());
-     }
-     writeAsm << "\n";
-    }
+        else {
+         writeAsm << *newFunc.returnValues.begin();
+         newFunc.returnValues.erase(newFunc.returnValues.begin());
+        }
+        writeAsm << "\n";
+      }
 
-      writeAsm << " pop rbp\n";
-      writeAsm << " ret\n";       
-    }
-    return data;
+        writeAsm << " pop rbp\n";
+        writeAsm << " ret\n";       
+      }
+      return data;
   }
 
   void compiler::toAssembly_function(func& newFunc) {
