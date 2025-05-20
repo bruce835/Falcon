@@ -4,6 +4,7 @@
 #include <cstring>
 #include <vector>
 #include <cctype>
+#include <chrono>
 #include "../include/parser.h"
 #include "../include/compiler.h"
 #include "../include/lexer.h"
@@ -14,6 +15,7 @@ char ch;
 std::string tokenType = "Type";
 std::vector<Token> tokens;
 std::string fileName = "";
+std::chrono::time_point<std::chrono::high_resolution_clock> initialTime = std::chrono::high_resolution_clock::now();
 
 std::string checkType(std::vector<char>& buf) {
 	std::string bufString(buf.begin(), buf.end());
@@ -50,36 +52,8 @@ std::vector<Token> tokenize(std::vector<Token>& tokens, std::vector<char>& buf, 
 	return tokens;
 }
 
-int main(int argc, char *argv[]) {
-	std::ifstream src;
-	std::string srcPath = argv[1];
-
-  for (const char& ch : srcPath) {
-    if (ch == '/') {
-      fileName.clear();
-    } 
-    else {
-      fileName.push_back(ch);
-    }
-  }
-
-  for (char& ch : fileName) {
-    if (ch == '.') {
-      while (true) {
-        if (fileName.back() == '.') {
-          fileName.pop_back();
-          break;
-        }
-        fileName.pop_back();
-        
-        if (fileName.empty()) {
-          break;
-        }
-      }
-    }
-  }
-
-	src.open(srcPath);
+std::vector<Token> readTokens(const std::string& srcPath) {
+	std::ifstream src(srcPath);
 	std::vector<char> buf;
 
 	if (!src) {
@@ -180,7 +154,37 @@ int main(int argc, char *argv[]) {
 			buf.push_back(ch);
 		}
 	}
+  return tokens;
+}
 
+int main(int argc, char *argv[]) {
+	std::string srcPath = argv[1];
+
+  for (const char& ch : srcPath) {
+    if (ch == '/') {
+      fileName.clear();
+    } 
+    else {
+      fileName.push_back(ch);
+    }
+  }
+
+  for (char& ch : fileName) {
+    if (ch == '.') {
+      while (true) {
+        if (fileName.back() == '.') {
+          fileName.pop_back();
+          break;
+        }
+        fileName.pop_back();
+        
+        if (fileName.empty()) {
+          break;
+        }
+      }
+    }
+  }
+  tokens = readTokens(srcPath);
   parse(tokens, fileName);
   return 0;
 }

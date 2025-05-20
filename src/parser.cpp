@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <unistd.h>
+#include <chrono>
 #include <sys/wait.h>
 #include "../include/lexer.h"
 #include "../include/parser.h"
@@ -273,5 +274,9 @@ int parse(std::vector<Token>& tokens, std::string& fileName) {
   if (usingLinux) {
     compileForLinux(fileName);
   }
+
+  auto exitTime = std::chrono::high_resolution_clock::now();
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(exitTime - initialTime);
+  std::cout << "Elapsed Time: " << elapsedTime.count() << "ms\n";
   return 0;
 }
