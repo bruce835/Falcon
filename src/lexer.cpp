@@ -9,6 +9,7 @@
 #include "../include/compiler.h"
 #include "../include/lexer.h"
 #include "../include/libraries/types.hpp"
+#include "../include/tokenProcessor.h"
 
 int lineNumber = 1;
 char ch;
@@ -64,87 +65,11 @@ std::vector<Token> readTokens(const std::string& srcPath) {
 		std::cerr << "Source file not found. Exiting.";
 		exit(0);
 	}
+  
+  while(src.get(ch)) {
+    processTokens(buf, ch, src);
+  }
 
-	while (src.get(ch)) {
-		if (std::isspace(ch)) {
-			if (ch == '\n') {
-				lineNumber++;
-			}
-
-			if (tokenType != "String") {
-				tokenize(tokens, buf, src);
-				continue;
-			}
-			
-			else {
-				buf.push_back(ch);
-			}
-		}
-
-    else if (ch == ',') {
-      if (tokenType != "String") { 
-      tokenize(tokens, buf, src);
-      if (buf.empty()) {
-        tokenType = ",";
-        buf.push_back(ch);
-        tokenize(tokens, buf, src);
-      }
-      }
-      
-      else {
-        buf.push_back(ch);
-      }
-    }
-
-		else if (ch == '\"') {
-			if (tokenType != "String") {
-				tokenize(tokens, buf, src);
-				tokenType = "\"";
-				buf.push_back(ch);
-				tokenize(tokens, buf, src);
-				tokenType = "String";
-			}
-
-			else {
-        tokenize(tokens, buf, src);
-        buf.push_back(ch);
-        tokenType = "\"";
-        tokenize(tokens, buf, src);
-			}
-		}
-		
-		else if (tokenType != "String") {
-
-		 if (ch == '(' || ch == ')') {
-			tokenize(tokens, buf, src);
-			tokenType = std::string(1, ch);
-			buf.push_back(ch);
-			tokenize(tokens, buf, src);
-		}
-			
-			else if (ch == '{' || ch == '}') {
-				tokenize(tokens, buf, src);
-				tokenType = std::string(1, ch);
-				buf.push_back(ch);
-				tokenize(tokens, buf, src);
-			}
-
-			else if (ch == ';') {
-			 tokenize(tokens, buf, src);
-			 tokenType = ";";
-			 buf.push_back(ch);
-			 tokenize(tokens, buf, src);
-			}
-
-			else {
-				buf.push_back(ch);
-			}
-		}
-		
-		else if (tokenType == "String") {
-			buf.push_back(ch);
-		}
-	}
   return tokens;
 }
 

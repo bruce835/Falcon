@@ -1,4 +1,5 @@
 int main() {
-  print("ayo why this lowky fire tho");
-  print("this makes no sense at all");
+  print("testing");
+  return;
+  print("this line should not print");
 }

@@ -17,8 +17,8 @@ std::vector<Token> tokenize(std::vector<Token>& tokens, std::vector<char>& buf, 
 extern std::vector<Token> tokens;
 extern std::string fileName;
 extern int lineNumber;
-
-extern std::ifstream src;
+extern std::string tokenType;
+extern std::vector<char> buf;
 
 extern std::chrono::time_point<std::chrono::high_resolution_clock> initialTime;
 #endif
