@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "../include/lexer.h"
-#include "libraries/functions.hpp"
+#include "lexer.h"
+#include "libraries/abstractions.hpp"
 
 extern bool usingMacos;
 extern bool usingLinux;

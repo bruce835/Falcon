@@ -8,7 +8,7 @@
 #include "../include/lexer.h"
 #include "../include/parser.h"
 #include "../include/compiler.h"
-#include "../include/libraries/functions.hpp"
+#include "../include/functions.h"
 
 std::string abstractionType = "null";
 int paramDepth = 0;
@@ -194,8 +194,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        nextToken = *nextTokenIt;       
 
         if (token.value == ";") {
-          functions functionsLocal;
-          newInstructionParams = functionsLocal.checkKeyword(funcTokens, newInstructionKeyword);
+          newInstructionParams = checkKeyword(funcTokens, newInstructionKeyword);
           funcTokens.clear();
           instruction newInstruction; 
           newInstruction.keyword = newInstructionKeyword;

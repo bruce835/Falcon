@@ -12,17 +12,11 @@ main:
  push rbp
  mov rbp, rsp
  lea rsi, [rel+litString_0]
- mov rdx, 27
- mov rdi, 1
- mov rax, 0x2000004
- syscall
- lea rsi, [rel+litString_1]
- mov rdx, 26
+ mov rdx, 14
  mov rdi, 1
  mov rax, 0x2000004
  syscall
  mov rax, 0
  pop rbp
  ret
-litString_0: db "ayo why this lowky fire tho", 0
-litString_1: db "this makes no sense at all", 0
+litString_0: db "so confused rn", 0
