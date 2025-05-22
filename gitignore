@@ -7,3 +7,7 @@ main
 bruh
 asm/*
 !asm/.gitignore
+exampleBuilds/*
+!exampleBuilds
+object/*
+!object
