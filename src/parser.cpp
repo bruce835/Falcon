@@ -20,7 +20,7 @@ compiler comp;
 void compileForLinux(const std::string& fileName) {
     std::vector<std::vector<std::string>> commands = {
         {"nasm", "-f", "elf64", "asm/" + fileName + ".asm", "-o", "object/" + fileName + ".o"},
-        {"ld", "object/" + fileName + ".o", "-o", "exampleBuilds" + fileName}
+        {"ld", "object/" + fileName + ".o", "-o", "exampleBuilds/" + fileName}
     };
 
     for (const auto& cmd : commands) {
