@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "lexer.h"
+#include "lexer_main.h"
 #include "libraries/abstractions.hpp"
 
 extern bool usingMacos;

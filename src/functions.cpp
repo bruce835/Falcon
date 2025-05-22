@@ -1,5 +1,5 @@
 #include "../include/libraries/abstractions.hpp"
-#include "../include/lexer.h"
+#include "../include/lexer_main.h"
 #include "../include/functions.h"
 #include <string>
 #include <vector>

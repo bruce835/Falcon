@@ -3,4 +3,7 @@ include/libraries/tokens.hpp
 bash.sh
 run_macos.sh
 run_linux.sh
-
+main
+bruh
+asm/*
+!asm/.gitignore

@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include "../include/compiler.h"
-#include "../include/lexer.h"
+#include "../include/lexer_main.h"
 #include <fstream>
 #include <iostream>
 

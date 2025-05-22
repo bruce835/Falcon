@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <chrono>
 #include <sys/wait.h>
-#include "../include/lexer.h"
+#include "../include/lexer_main.h"
 #include "../include/parser.h"
 #include "../include/compiler.h"
 #include "../include/functions.h"
@@ -99,6 +99,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
       std::cerr << "p_01: Expected \"(\".";
        exit(0);
     } 
+
     else {
       paramDepth++;
     }
@@ -143,7 +144,7 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        paramDepth++;
      }
 
-     else if (!invalidParamToken){
+     else if (!invalidParamToken) {
        parameter newParam;
        newParam.type = token.type;
         paramType = newParam.type;

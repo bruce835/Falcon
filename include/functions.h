@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "libraries/abstractions.hpp"
-#include "lexer.h"
+#include "lexer_main.h"
 
 int processKeyword();
 std::vector<parameter> checkKeyword (std::vector<Token>& funcTokens, const std::string& newInstruction);
