@@ -8,6 +8,6 @@ bruh
 asm/*
 !asm/.gitignore
 exampleBuilds/*
-!exampleBuilds
+!exampleBuilds/./gitignore
 object/*
-!object
+!object/.gitignore
