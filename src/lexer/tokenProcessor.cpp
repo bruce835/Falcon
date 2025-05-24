@@ -1,8 +1,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "../../include/tokenProcessor.h"
-#include "../../include/lexer_main.h"
+#include "tokenProcessor.h"
+#include "lexer_main.h"
 
 void processTokens(std::vector<char>& buf, const char& ch, std::ifstream& src) {
   if (std::isspace(ch)) {

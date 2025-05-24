@@ -5,10 +5,10 @@
 #include <unistd.h>
 #include <chrono>
 #include <sys/wait.h>
-#include "../include/lexer_main.h"
-#include "../include/parser.h"
-#include "../include/compiler.h"
-#include "../include/functions.h"
+#include "lexer_main.h"
+#include "parser_main.h"
+#include "compiler.h"
+#include "functions.h"
 
 std::string abstractionType = "null";
 int paramDepth = 0;

@@ -1,6 +1,6 @@
-#include "../include/libraries/abstractions.hpp"
-#include "../include/lexer_main.h"
-#include "../include/functions.h"
+#include "libraries/abstractions.hpp"
+#include "lexer_main.h"
+#include "functions.h"
 #include <string>
 #include <vector>
 #include <iostream>

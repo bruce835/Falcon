@@ -5,11 +5,11 @@
 #include <vector>
 #include <cctype>
 #include <chrono>
-#include "../../include/parser.h"
-#include "../../include/compiler.h"
-#include "../../include/lexer_main.h"
-#include "../../include/libraries/types.hpp"
-#include "../../include/tokenProcessor.h"
+#include "parser_main.h"
+#include "compiler.h"
+#include "lexer_main.h"
+#include "libraries/types.hpp"
+#include "tokenProcessor.h"
 
 int lineNumber = 1;
 char ch;

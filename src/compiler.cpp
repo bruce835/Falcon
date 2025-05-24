@@ -2,8 +2,8 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "../include/compiler.h"
-#include "../include/lexer_main.h"
+#include "compiler.h"
+#include "lexer_main.h"
 #include <fstream>
 #include <iostream>
 
