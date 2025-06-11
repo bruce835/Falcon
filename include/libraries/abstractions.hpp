@@ -4,6 +4,7 @@
 #include <vector>
 #include <optional>
 
+// Functions
 struct parameter {
   std::string type;
   std::string value;
@@ -21,5 +22,11 @@ struct func {
   std::vector<std::string> returnValues;
   std::string identifier;
   int paramCount;
+};
+
+// Variables
+struct variable {
+  std::string type;
+  std::string value;
 };
 #endif

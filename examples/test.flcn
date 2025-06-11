@@ -1,8 +1,0 @@
-int main() {
-  print("This");
-  print(" Still");
-  print(" Works");
-  print(" Great!");
-  return 1;
-  print("dontprintthis");
-}

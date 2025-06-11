@@ -1,5 +1,0 @@
-int main() {
-  print("testing");
-  return;
-  print("this line should not print");
-}

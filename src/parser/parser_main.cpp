@@ -235,6 +235,29 @@ int parseFunc(Token& token, auto& tokenIterator, int& funcStep, func& newFunc) {
        }
      }
 
+    else if (token.type == "Declarator") {
+      variable newVar;
+      newVar.type = token.value;
+      if (newVar.type == "string") {
+        if (nextToken.value != "\"") {
+          std::cerr << "\nExpected '\"' before string literal.";
+          exit(0);
+        }
+
+        tokenIterator++;
+        nextTokenIt++;
+        nextToken = *nextTokenIt;
+        newVar.value = nextToken.value;
+        std::cout << "Found variable of type " << newVar.type << " with value " << newVar.value;
+        tokenIterator++;
+        nextTokenIt++;
+        nextToken = *nextTokenIt;
+        if (nextToken.value != "\"") {
+          std::cerr << "Expected '\"' after string literal.";
+        }
+      }
+    } 
+
      else if (token.value == "}") {
        return 0;
      }
@@ -266,9 +289,9 @@ int scan(Token& token, std::vector<Token>::iterator& tokenIterator) {
 
         comp.toAssembly_function(newFunc);
       //  printParseTree(newFunc, 0);
-      } 
+      }    
+    }
   }
-}
 
   return 0;
 }
