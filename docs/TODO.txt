@@ -1,3 +1,2 @@
-Compile parse tree.
 Create new tokens for symbols like ., +, -, etc.
 Make compiler compile to program of given name.

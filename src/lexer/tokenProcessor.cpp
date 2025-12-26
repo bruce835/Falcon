@@ -56,7 +56,14 @@ void processTokens(std::vector<char>& buf, const char& ch, std::ifstream& src) {
   
   else if (tokenType != "String") {
 
-   if (ch == '(' || ch == ')') {
+  if (ch == '+') {
+    tokenize(tokens, buf, src);
+    tokenType = "+";
+    buf.push_back(ch);
+    tokenize(tokens, buf, src);
+  }
+
+  if (ch == '(' || ch == ')') {
     tokenize(tokens, buf, src);
     tokenType = std::string(1, ch);
     buf.push_back(ch);
